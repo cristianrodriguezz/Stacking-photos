@@ -7,19 +7,23 @@
 </head>
 <body>
   <main>
+    <h1></h1>
     <section id="pila">
 
     </section>
   </main>
-  <input id="input" type="file" multiple accept="image/png, image/jpeg">
-  <button onclick="mostrarArchivos()">Mostrar archivos seleccionados</button>
+  <label for="input">Elegir fotos</label>
+  <input name="input" id="input" hidden type="file" multiple accept="image/*">
 </body>
 <script>
 
   const containerImage = document.getElementById('pila')
+  const images = document.getElementById('input')
+
   let inclination = []
+  let showPhotos = false
   function mostrarArchivos() {
-    const images = document.getElementById('input')
+    if (showPhotos) return
 
     // Verificar si se han seleccionado archivos
     if (images.files.length > 0) {
@@ -58,15 +62,23 @@
         alert('No se han seleccionado archivos.')
     }
     containerImage.addEventListener('click', click)
+    showPhotos = true
 }
+
+  images.addEventListener('change', () => {
+    mostrarArchivos() 
+  })
+
 
 
 let zIndex = 100
 let isAnimate = false
 
+
   function click(e){
 
     if(isAnimate) return
+    
 
     zIndex -= 1
     
@@ -80,7 +92,6 @@ let isAnimate = false
         image.style.transform = `translateX(${sizeImage *1.1}px) translateY(${sizeImage * -.3}px) rotate(45deg)`
       }
     })  
-
 
 
     inclination.forEach(({deg,selector}) => {
@@ -117,11 +128,21 @@ let isAnimate = false
     min-height: 100vh;
     background-color: rgb(254, 255, 223);
     overflow-x: hidden;
+    
+  }
+  label{
+    background-color: rgb(107, 107, 219);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 5px;
+    text-align: center;
+    color: beige;
+    width: 100%;
   }
   body section{
     position: relative;
-    width: 300px;
-    height: 200px;
+    width: 350px;
+    height: 250px;
     margin-bottom: 100px;
 
     & img{
