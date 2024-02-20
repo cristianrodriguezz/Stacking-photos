@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <main>
+    <section id="pila">
+
+    </section>
+  </main>
+  <input id="input" type="file" multiple accept="image/png, image/jpeg">
+  <button onclick="mostrarArchivos()">Mostrar archivos seleccionados</button>
+</body>
+<script>
+
+  const containerImage = document.getElementById('pila')
+  let inclination = []
+  function mostrarArchivos() {
+    const images = document.getElementById('input')
+
+    // Verificar si se han seleccionado archivos
+    if (images.files.length > 0) {
+        for (let i = 0; i < images.files.length; i++) {
+            const reader = new FileReader()
+            const file = images.files[i]
+
+            reader.onload = function(event) {
+                // Obtener el contenido del archivo como base64
+                const archivoBase64 = event.target.result;
+
+                // Guardar el archivo en localStorage
+                localStorage.setItem('archivo_' + i, archivoBase64)
+                const img = document.createElement("img")
+                img.src = archivoBase64
+                img.alt = "Descripción de la imagen"
+                img.className = 'image'
+                img.zIndex = 0;
+
+                let degInclination = Math.random() * 18 *( Math.random() * 2 - 1)
+                inclination.push({selector: img, deg: degInclination})
+                img.style.transform = `rotate(${degInclination}deg)`
+
+                containerImage.appendChild(img)
+
+                console.log('Archivo', file.name, 'guardado en localStorage.')
+            };
+
+            // Leer el contenido del archivo como base64
+            reader.readAsDataURL(file)
+            
+
+        }
+
+    } else {
+        alert('No se han seleccionado archivos.')
+    }
+    containerImage.addEventListener('click', click)
+}
+
+
+let zIndex = 100
+let isAnimate = false
+
+  function click(e){
+
+    if(isAnimate) return
+
+    zIndex -= 1
+    
+    const image = e.target
+
+    let sizeImage = e.target.clientWidth
+
+    isAnimate = true
+    inclination.forEach(({deg,selector}) => {
+      if (selector === image) {
+        image.style.transform = `translateX(${sizeImage *1.1}px) translateY(${sizeImage * -.3}px) rotate(45deg)`
+      }
+    })  
+
+
+
+    inclination.forEach(({deg,selector}) => {
+      if (selector === image) {
+        image.addEventListener('transitionend', () => {
+          event.target.style.zIndex = zIndex
+          setTimeout(() => {
+            image.style.transform = `translateX(0px) rotate(${deg}deg)`
+          }, 85)
+        })
+      }
+    })  
+    setTimeout(() => {
+      isAnimate = false
+    },850)
+
+    
+  }
+
+
+
+
+</script>
+
+<style>
+  *{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  }
+  body{
+    display: grid;
+    place-content: center;
+    min-height: 100vh;
+    background-color: rgb(254, 255, 223);
+    overflow-x: hidden;
+  }
+  body section{
+    position: relative;
+    width: 300px;
+    height: 200px;
+    margin-bottom: 100px;
+
+    & img{
+      width: 350px;
+      height: 250px;
+      border-radius: 10px;
+      position: absolute;
+      transform-origin: 50%;
+      object-fit: cover;
+      cursor:pointer;
+      transition: ease-in-out 400ms; 
+      z-index: 100;
+
+    }
+  }
+
+  
+</style>
+
+</html>
