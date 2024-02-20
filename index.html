@@ -14,6 +14,7 @@
   </main>
   <label for="input">Elegir fotos</label>
   <input name="input" id="input" hidden type="file" multiple accept="image/*">
+  <output id="output">Ninguna foto seleccionada</output>
 </body>
 <script>
 
@@ -23,7 +24,10 @@
   let inclination = []
   let showPhotos = false
   function mostrarArchivos() {
+
     if (showPhotos) return
+    
+    
 
     // Verificar si se han seleccionado archivos
     if (images.files.length > 0) {
@@ -31,9 +35,20 @@
             const reader = new FileReader()
             const file = images.files[i]
 
+            if(file.size > 1000000) {
+              output.innerText = "Las fotos no pueden pesar más de 1Mb"
+              return
+            }else{
+              output.innerText = ""
+            }
+
+
+
             reader.onload = function(event) {
                 // Obtener el contenido del archivo como base64
                 const archivoBase64 = event.target.result;
+
+                console.log(file);
 
                 // Guardar el archivo en localStorage
                 localStorage.setItem('archivo_' + i, archivoBase64)
