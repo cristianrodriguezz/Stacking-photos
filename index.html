@@ -35,12 +35,8 @@
             const reader = new FileReader()
             const file = images.files[i]
 
-            if(file.size > 1000000) {
-              output.innerText = "Las fotos no pueden pesar más de 1Mb"
-              return
-            }else{
-              output.innerText = ""
-            }
+            output.innerText = ""
+
 
 
 
@@ -50,8 +46,7 @@
 
                 console.log(file);
 
-                // Guardar el archivo en localStorage
-                localStorage.setItem('archivo_' + i, archivoBase64)
+
                 const img = document.createElement("img")
                 img.src = archivoBase64
                 img.alt = "Descripción de la imagen"
@@ -64,7 +59,6 @@
 
                 containerImage.appendChild(img)
 
-                console.log('Archivo', file.name, 'guardado en localStorage.')
             };
 
             // Leer el contenido del archivo como base64
